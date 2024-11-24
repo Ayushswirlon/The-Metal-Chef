@@ -51,8 +51,8 @@ function About_us() {
                 scale: 1.05,
                 boxShadow: "0 0 30px rgba(255,255,255,0.2)"
               }}
-              src="https://placehold.co/400x300" 
-              alt="Factory Interior" 
+              src="/path-to-your-actual-factory-image.jpg"
+              alt="Our State-of-the-Art Facility" 
               className="about-image"
             />
           </motion.div>
@@ -127,6 +127,15 @@ function About_us() {
             ))}
           </div>
         </motion.div>
+
+        <div className="mission-section">
+          <h2 className="subtitle">Our Mission</h2>
+          <p className="description">
+            To revolutionize the aluminum industry through sustainable practices
+            and cutting-edge technology, delivering premium quality products
+            that exceed customer expectations.
+          </p>
+        </div>
       </motion.div>
     </div>
   );
