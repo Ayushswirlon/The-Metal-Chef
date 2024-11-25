@@ -1,161 +1,92 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useLoadScript, GoogleMap, Marker } from '@react-google-maps/api';
-import { useInView } from 'react-intersection-observer';
-import { useEffect, useState } from 'react';
+import React from "react";
+import { motion } from "framer-motion";
+import { useLoadScript, GoogleMap, Marker } from "@react-google-maps/api";
+import "../index.css";
+import AnimatedCounter from "../components/AnimatedCounter";
 
 function Home() {
   // Example with company logos
   const companies = [
     {
       name: "MetalTech Solutions",
-      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7dfb3d0c4ab82b7046_Logo-white.svg"
+      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7dfb3d0c4ab82b7046_Logo-white.svg",
     },
     {
       name: "Precision Alloys",
-      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d7d5b0c0d594f6f13_Logo-white.svg"
+      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d7d5b0c0d594f6f13_Logo-white.svg",
     },
     {
       name: "IndustrialForge",
-      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d1a09c8b0c68f1377_Logo-white.svg"
+      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d1a09c8b0c68f1377_Logo-white.svg",
     },
     {
       name: "NextGen Metals",
-      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d6c1c8a012e06e1b1_Logo-white.svg"
+      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d6c1c8a012e06e1b1_Logo-white.svg",
     },
     {
       name: "EcoMetal Dynamics",
-      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d7c8d708c86a91f17_Logo-white.svg"
+      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d7c8d708c86a91f17_Logo-white.svg",
     },
     {
       name: "AlphaCore Industries",
-      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d1a09c868968f1376_Logo-white.svg"
+      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d1a09c868968f1376_Logo-white.svg",
     },
     {
       name: "SteelTech Pro",
-      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d6c1c8a3d7e06e1b0_Logo-white.svg"
+      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d6c1c8a3d7e06e1b0_Logo-white.svg",
     },
     {
       name: "MetalWorks Global",
-      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d7d5b0c0d594f6f13_Logo-white.svg"
-    }
+      logo: "https://assets.website-files.com/64060ad81a09c81fe88f0df8/64060c7d7d5b0c0d594f6f13_Logo-white.svg",
+    },
   ];
 
   // Services data
   const services = [
     {
       title: "Aluminum Ingot Manufacturing",
-      description: "Premium quality aluminum ingots with precise composition control and industry-leading purity levels.",
-      icon: "🏭"  // You can replace these with proper icons
+      description:
+        "Premium quality aluminum ingots with precise composition control and industry-leading purity levels.",
+      icon: "🏭", // You can replace these with proper icons
     },
     {
       title: "Scrap Collection",
-      description: "Professional aluminum scrap collection service with efficient logistics and fair pricing.",
-      icon: "♻️"
+      description:
+        "Professional aluminum scrap collection service with efficient logistics and fair pricing.",
+      icon: "♻️",
     },
     {
       title: "Metal Processing",
-      description: "State-of-the-art processing facilities for various grades of aluminum scrap.",
-      icon: "⚙️"
+      description:
+        "State-of-the-art processing facilities for various grades of aluminum scrap.",
+      icon: "⚙️",
     },
     {
       title: "Quality Testing",
-      description: "Advanced laboratory testing ensuring highest quality standards.",
-      icon: "🔍"
+      description:
+        "Advanced laboratory testing ensuring highest quality standards.",
+      icon: "🔍",
     },
     {
       title: "Sustainable Practices",
-      description: "Eco-friendly recycling processes with minimal environmental impact.",
-      icon: "🌱"
+      description:
+        "Eco-friendly recycling processes with minimal environmental impact.",
+      icon: "🌱",
     },
     {
       title: "Custom Solutions",
-      description: "Tailored metal processing solutions for specific industry needs.",
-      icon: "⚡"
-    }
+      description:
+        "Tailored metal processing solutions for specific industry needs.",
+      icon: "⚡",
+    },
   ];
 
   // Map configuration
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY" // You'll need to replace this with your actual API key
+    googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY", // You'll need to replace this with your actual API key
   });
 
   const mapCenter = { lat: 28.7041, lng: 77.1025 }; // Example coordinates for Delhi
-
-  const CounterSection = () => {
-    const { ref, inView } = useInView({
-      threshold: 0.5,
-      triggerOnce: true
-    });
-
-    const [counts, setCounts] = useState({
-      customers: 0,
-      projects: 0,
-      tons: 0,
-      countries: 0
-    });
-
-    const targetCounts = {
-      customers: 5000,
-      projects: 1500,
-      tons: 50000,
-      countries: 25
-    };
-
-    useEffect(() => {
-      if (inView) {
-        const duration = 2000; // 2 seconds
-        const steps = 60;
-        const interval = duration / steps;
-
-        const incrementCounts = (step) => {
-          setCounts(prev => ({
-            customers: Math.min(Math.floor((targetCounts.customers / steps) * step), targetCounts.customers),
-            projects: Math.min(Math.floor((targetCounts.projects / steps) * step), targetCounts.projects),
-            tons: Math.min(Math.floor((targetCounts.tons / steps) * step), targetCounts.tons),
-            countries: Math.min(Math.floor((targetCounts.countries / steps) * step), targetCounts.countries)
-          }));
-        };
-
-        let step = 0;
-        const timer = setInterval(() => {
-          step++;
-          incrementCounts(step);
-          if (step >= steps) clearInterval(timer);
-        }, interval);
-
-        return () => clearInterval(timer);
-      }
-    }, [inView]);
-
-    return (
-      <div ref={ref} className="py-32 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { label: "Happy Customers", value: counts.customers, symbol: "+" },
-              { label: "Projects Completed", value: counts.projects, symbol: "+" },
-              { label: "Tons Produced", value: counts.tons, symbol: "MT" },
-              { label: "Countries Served", value: counts.countries, symbol: "+" }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center p-8 bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 rounded-2xl backdrop-blur-sm border border-gray-700/30 hover:border-gray-600/50 transition-all duration-300"
-              >
-                <div className="text-4xl font-bold mb-2 bg-gradient-to-r from-gray-100 to-gray-300 bg-clip-text text-transparent">
-                  {value.toLocaleString()}{stat.symbol}
-                </div>
-                <div className="text-gray-400">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
@@ -164,13 +95,14 @@ function Home() {
 
       {/* Unified ambient glow */}
       <div className="fixed inset-0">
-        <div 
+        <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{
-            width: '140vw',
-            height: '140vh',
-            background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%)',
-            filter: 'blur(90px)',
+            width: "140vw",
+            height: "140vh",
+            background:
+              "radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%)",
+            filter: "blur(90px)",
           }}
         />
       </div>
@@ -188,10 +120,10 @@ function Home() {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ 
+              transition={{
                 duration: 0.8,
                 type: "spring",
-                stiffness: 100 
+                stiffness: 100,
               }}
               className="relative inline-block"
             >
@@ -201,13 +133,14 @@ function Home() {
               <div className="absolute -inset-2 bg-gradient-to-r from-gray-500 to-gray-300 opacity-10 blur-2xl rounded-full"></div>
             </motion.div>
 
-            <motion.p 
+            <motion.p
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
               className="text-2xl text-gray-300 max-w-3xl mx-auto font-light tracking-wide"
             >
-              Crafting Excellence in Aluminum • Transforming Metal into Masterpieces
+              Crafting Excellence in Aluminum • Transforming Metal into
+              Masterpieces
             </motion.p>
 
             <motion.div
@@ -216,9 +149,9 @@ function Home() {
               transition={{ delay: 0.5, duration: 0.8 }}
             >
               <motion.button
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
-                  boxShadow: "0 0 30px rgba(255,255,255,0.2)"
+                  boxShadow: "0 0 30px rgba(255,255,255,0.2)",
                 }}
                 whileTap={{ scale: 0.95 }}
                 className="relative overflow-hidden rounded-full group"
@@ -232,7 +165,7 @@ function Home() {
           </motion.div>
 
           {/* Scroll Indicator */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}
@@ -240,7 +173,11 @@ function Home() {
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
               className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center p-2"
             >
               <motion.div className="w-1 h-1 bg-gray-400 rounded-full" />
@@ -254,29 +191,32 @@ function Home() {
             {[
               {
                 title: "Premium Ingots",
-                description: "Masterfully crafted aluminum ingots that set industry benchmarks for excellence and purity"
+                description:
+                  "Masterfully crafted aluminum ingots that set industry benchmarks for excellence and purity",
               },
               {
                 title: "Expert Recycling",
-                description: "State-of-the-art aluminum scrap processing with precision and environmental consciousness"
+                description:
+                  "State-of-the-art aluminum scrap processing with precision and environmental consciousness",
               },
               {
                 title: "Sustainable Future",
-                description: "Pioneering eco-friendly practices that transform today's waste into tomorrow's resources"
-              }
+                description:
+                  "Pioneering eco-friendly practices that transform today's waste into tomorrow's resources",
+              },
             ].map((feature, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ 
+                transition={{
                   duration: 0.8,
-                  delay: index * 0.2 
+                  delay: index * 0.2,
                 }}
-                whileHover={{ 
+                whileHover={{
                   y: -10,
-                  transition: { duration: 0.3 }
+                  transition: { duration: 0.3 },
                 }}
                 className="bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 p-8 rounded-2xl backdrop-blur-sm border border-gray-700/30 shadow-2xl hover:border-gray-600/50 transition-all duration-300"
               >
@@ -291,43 +231,129 @@ function Home() {
           </div>
         </div>
 
-        <CounterSection />
-
-        {/* Companies Section */}
+        {/* Replace Companies Section with Achievements & Testimonials */}
         <div className="py-32 px-4">
-          <div className="max-w-7xl mx-auto">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-3xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-300"
-            >
-              Trusted By Industry Leaders
-            </motion.h2>
-            
+          {/* Achievements Counter Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="mb-32"
+          >
+            <h2 className="text-4xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-300">
+              Our Impact in Numbers
+            </h2>
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {companies.map((company, index) => (
+              {[
+                { number: "10000+", label: "Happy Customers", icon: "😊" },
+                { number: "50000+", label: "Tons Produced", icon: "🏭" },
+                { number: "99.9", label: "Quality Score", icon: "⭐" },
+                { number: "25+", label: "Years of Excellence", icon: "🏆" },
+              ].map((stat, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center justify-center backdrop-blur-sm rounded-lg px-8 py-4 border border-gray-700/30 hover:border-gray-500/50 transition-all duration-300"
+                  className="bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 p-6 rounded-2xl backdrop-blur-sm border border-gray-700/30 text-center group hover:border-gray-500/50 transition-all duration-300"
                 >
-                  <img 
-                    src={company.logo} 
-                    alt={company.name}
-                    className="h-10 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity duration-300"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = `data:image/svg+xml,${encodeURIComponent(`
-                        <svg width="150" height="50" xmlns="http://www.w3.org/2000/svg">
-                          <text x="50%" y="50%" font-family="Arial" font-size="14" fill="white" text-anchor="middle">${company.name}</text>
-                        </svg>
-                      `)}`;
-                    }}
-                  />
+                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    {stat.icon}
+                  </div>
+                  <div className="text-3xl font-bold text-white mb-2">
+                    <AnimatedCounter value={stat.number} />
+                    <span className="text-gray-300 text-xl ml-1">
+                      {stat.number.includes("+") ? "+" : ""}
+                      {stat.number.includes("%") ? "%" : ""}
+                    </span>
+                  </div>
+                  <p className="text-gray-400 mt-2">{stat.label}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Testimonials Section */}
+          <div className="py-20">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-4xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-300"
+            >
+              What Our Customers Say
+            </motion.h2>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  name: "John Smith",
+                  role: "Production Manager at TechMetals",
+                  image: "https://randomuser.me/api/portraits/men/1.jpg",
+                  quote:
+                    "The quality of aluminum ingots from The Metal Chef is consistently exceptional. Their attention to detail and commitment to quality has made them our trusted supplier for years.",
+                },
+                {
+                  name: "Sarah Johnson",
+                  role: "CEO at InnovateAlloys",
+                  image: "https://randomuser.me/api/portraits/women/1.jpg",
+                  quote:
+                    "Working with The Metal Chef has transformed our manufacturing process. Their custom solutions and reliable delivery have been instrumental in our growth.",
+                },
+                {
+                  name: "Michael Chen",
+                  role: "Director at GlobalCast Industries",
+                  image: "https://randomuser.me/api/portraits/men/2.jpg",
+                  quote:
+                    "The Metal Chef's sustainable practices and premium quality products align perfectly with our values. They're not just a supplier, they're a strategic partner.",
+                },
+              ].map((testimonial, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 p-8 rounded-2xl backdrop-blur-sm border border-gray-700/30 relative group"
+                >
+                  {/* Quote Icon */}
+                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full flex items-center justify-center text-zinc-900 font-bold text-xl">
+                    "
+                  </div>
+
+                  <div className="flex items-center mb-6">
+                    <motion.img
+                      whileHover={{ scale: 1.1 }}
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-16 h-16 rounded-full border-2 border-gray-700/30"
+                    />
+                    <div className="ml-4">
+                      <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-300">
+                        {testimonial.name}
+                      </h3>
+                      <p className="text-gray-400">{testimonial.role}</p>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-300 leading-relaxed">
+                    {testimonial.quote}
+                  </p>
+
+                  {/* Rating Stars */}
+                  <div className="mt-6 flex space-x-1">
+                    {[...Array(5)].map((_, i) => (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: index * 0.1 + i * 0.1 }}
+                        className="text-yellow-400"
+                      >
+                        ⭐
+                      </motion.span>
+                    ))}
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -336,7 +362,7 @@ function Home() {
 
         {/* Services Section */}
         <div className="py-32 px-4">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -372,7 +398,7 @@ function Home() {
         {/* Location Section */}
         <div className="py-32 px-4">
           <div className="container mx-auto px-4 py-32">
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -429,20 +455,20 @@ function Home() {
                         {
                           featureType: "all",
                           elementType: "geometry",
-                          stylers: [{ color: "#242f3e" }]
+                          stylers: [{ color: "#242f3e" }],
                         },
                         {
                           featureType: "all",
                           elementType: "labels.text.stroke",
-                          stylers: [{ color: "#242f3e" }]
+                          stylers: [{ color: "#242f3e" }],
                         },
                         {
                           featureType: "all",
                           elementType: "labels.text.fill",
-                          stylers: [{ color: "#746855" }]
-                        }
+                          stylers: [{ color: "#746855" }],
+                        },
                         // Add more custom styles as needed
-                      ]
+                      ],
                     }}
                   >
                     <Marker position={mapCenter} />
