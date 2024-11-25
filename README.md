@@ -1,4 +1,4 @@
-# My React Project
+# THE METAL CHEF
 
 A simple and interactive web application built with React.
 
